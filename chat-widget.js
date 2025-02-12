@@ -1,17 +1,29 @@
 (function() {
-  // Helper function to convert Markdown to HTML using Marked
+  // Helper function to convert Markdown to HTML using Marked.
+  // This version uses Cloudflare’s CDN version and logs the Marked version.
   function convertMarkdown(text) {
-    if (typeof marked !== 'undefined') {
-      // Use marked.parse if available (for newer versions), otherwise use marked()
-      return typeof marked.parse === "function" ? marked.parse(text) : marked(text);
+    if (window.marked) {
+      try {
+        // Use marked.parse if available (newer versions); otherwise, call marked(text)
+        return typeof marked.parse === "function" ? marked.parse(text) : marked(text);
+      } catch (e) {
+        console.error("Error converting markdown:", e);
+        return text;
+      }
     }
-    // Fallback: return plain text if Marked isn't loaded (should not happen)
+    console.warn("Marked library not loaded.");
     return text;
   }
 
   function initChatWidget() {
-    // Chat Widget Script
-    // Create and inject styles
+    // Debug: log the Marked version (if available)
+    if (window.marked) {
+      console.log("Marked loaded, version:", window.marked.version || "unknown");
+    } else {
+      console.error("Marked library not loaded.");
+    }
+
+    // Chat Widget Styles
     const styles = `
       .n8n-chat-widget {
           --chat--color-primary: var(--n8n-chat-primary-color, #854fff);
@@ -305,7 +317,7 @@
     fontLink.href = 'https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/style.css';
     document.head.appendChild(fontLink);
 
-    // Inject styles
+    // Inject styles into the document head
     const styleSheet = document.createElement('style');
     styleSheet.textContent = styles;
     document.head.appendChild(styleSheet);
@@ -335,7 +347,7 @@
       }
     };
 
-    // Merge user config with defaults
+    // Merge user configuration (if provided) with defaults
     const config = window.ChatWidgetConfig
       ? {
           webhook: { ...defaultConfig.webhook, ...window.ChatWidgetConfig.webhook },
@@ -350,11 +362,11 @@
 
     let currentSessionId = '';
 
-    // Create widget container
+    // Create the main widget container
     const widgetContainer = document.createElement('div');
     widgetContainer.className = 'n8n-chat-widget';
 
-    // Set CSS variables for colors
+    // Set CSS variables for colors based on config
     widgetContainer.style.setProperty('--n8n-chat-primary-color', config.style.primaryColor);
     widgetContainer.style.setProperty('--n8n-chat-secondary-color', config.style.secondaryColor);
     widgetContainer.style.setProperty('--n8n-chat-background-color', config.style.backgroundColor);
@@ -448,7 +460,7 @@
         const botMessageContent = Array.isArray(responseData)
           ? responseData[0].output
           : responseData.output;
-        // Convert Markdown to HTML using the helper
+        // Convert Markdown to HTML using our helper function.
         botMessageDiv.innerHTML = convertMarkdown(botMessageContent);
         messagesContainer.appendChild(botMessageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -468,7 +480,7 @@
 
       const userMessageDiv = document.createElement('div');
       userMessageDiv.className = 'chat-message user';
-      // Convert user Markdown message to HTML using the helper
+      // Convert the user's Markdown message to HTML.
       userMessageDiv.innerHTML = convertMarkdown(message);
       messagesContainer.appendChild(userMessageDiv);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -484,7 +496,7 @@
         const botMessageDiv = document.createElement('div');
         botMessageDiv.className = 'chat-message bot';
         const botMessageContent = Array.isArray(data) ? data[0].output : data.output;
-        // Convert bot Markdown message to HTML using the helper
+        // Convert the bot's Markdown response to HTML.
         botMessageDiv.innerHTML = convertMarkdown(botMessageContent);
         messagesContainer.appendChild(botMessageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -518,7 +530,7 @@
       chatContainer.classList.toggle('open');
     });
 
-    // Add close button handlers
+    // Add handlers to close the chat interface
     const closeButtons = chatContainer.querySelectorAll('.close-button');
     closeButtons.forEach(button => {
       button.addEventListener('click', () => {
@@ -527,9 +539,13 @@
     });
   }
 
-  // Dynamically load the Marked library and then initialize the chat widget
+  // Dynamically load the Marked library from Cloudflare.
+  // Using Cloudflare’s CDN URL for version 4.3.0
   const markedScript = document.createElement('script');
-  markedScript.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+  markedScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js';
   markedScript.onload = initChatWidget;
+  markedScript.onerror = function() {
+    console.error("Failed to load the Marked library.");
+  };
   document.head.appendChild(markedScript);
 })();
