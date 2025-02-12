@@ -273,6 +273,21 @@
             .n8n-chat-widget .chat-footer a:hover {
                 opacity: 1;
             }
+            
+            /* Markdown specific styling */
+            .n8n-chat-widget .chat-message p {
+                margin: 0;
+            }
+            .n8n-chat-widget .chat-message em {
+                font-style: italic;
+            }
+            .n8n-chat-widget .chat-message strong {
+                font-weight: bold;
+            }
+            .n8n-chat-widget .chat-message a {
+                color: var(--chat--color-primary);
+                text-decoration: underline;
+            }
         `;
 
         // Load Geist font
