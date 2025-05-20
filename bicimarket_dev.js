@@ -306,14 +306,14 @@
           font-weight: bold;
       }
       .n8n-chat-widget .chat-message a {
-          color: var(--chat--color-font);  /* Use font color instead of primary */
+          color: var(--chat--color-background);  /* Use font color instead of primary */
           text-decoration: underline;
           opacity: 0.9;
       }
       .n8n-chat-widget .chat-message a:hover {
           opacity: 1;
           /* Remove color change, keep same as default */
-          color: var(--chat--color-font);
+          color: var(--chat--color-background);
       }
     `;
 
