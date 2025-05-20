@@ -305,15 +305,25 @@
       .n8n-chat-widget .chat-message strong {
           font-weight: bold;
       }
-      .n8n-chat-widget .chat-message a {
-          color: var(--chat--color-background);  /* Use font color instead of primary */
+      /* For USER messages (gradient background) */
+      .n8n-chat-widget .chat-message.user a {
+          color: var(--chat--color-background);  /* White or light color */
           text-decoration: underline;
           opacity: 0.9;
       }
-      .n8n-chat-widget .chat-message a:hover {
+      .n8n-chat-widget .chat-message.user a:hover {
           opacity: 1;
-          /* Remove color change, keep same as default */
           color: var(--chat--color-background);
+      }
+      /* For BOT messages (white background) */
+      .n8n-chat-widget .chat-message.bot a {
+          color: var(--chat--color-primary);  /* Use primary color */
+          text-decoration: underline;
+          opacity: 0.9;
+      }
+      .n8n-chat-widget .chat-message.bot a:hover {
+          opacity: 1;
+          color: var(--chat--color-primary);
       }
     `;
 
