@@ -28,8 +28,8 @@
       .n8n-chat-widget {
           --chat--color-primary: #ef9302;  /* Was var(--n8n-chat-primary-color, #854fff) */
           --chat--color-secondary: #ef9302;  /* Was var(--n8n-chat-secondary-color, #6b3fd4) */
-          --chat--color-background: #ffffff;  /* Was var(--n8n-chat-background-color, #ffffff) */
-          --chat--color-font: #333333;  /* Was var(--n8n-chat-font-color, #333333) */
+          --chat--color-background: #ffffff !important;  /* Was var(--n8n-chat-background-color, #ffffff) */
+          --chat--color-font: #333333 !important;  /* Was var(--n8n-chat-font-color, #333333) */
           font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       }
 
@@ -41,7 +41,7 @@
           display: none;
           width: 380px;
           height: 600px;
-          background: var(--chat--color-background);
+          background: #ffffff !important;
           border-radius: 12px;
           box-shadow: 0 8px 32px rgba(133, 79, 255, 0.15);
           border: 1px solid rgba(133, 79, 255, 0.2);
@@ -75,7 +75,7 @@
           transform: translateY(-50%);
           background: none;
           border: none;
-          color: var(--chat--color-font);
+          color: #333333 !important;
           cursor: pointer;
           padding: 4px;
           display: flex;
@@ -98,7 +98,7 @@
       .n8n-chat-widget .brand-header span {
           font-size: 18px;
           font-weight: 500;
-          color: var(--chat--color-font);
+          color: #333333 !important;
       }
 
       .n8n-chat-widget .new-conversation {
@@ -115,7 +115,7 @@
       .n8n-chat-widget .welcome-text {
           font-size: 24px;
           font-weight: 600;
-          color: var(--chat--color-font);
+          color: #333333 !important;
           margin-bottom: 24px;
           line-height: 1.3;
       }
@@ -150,7 +150,7 @@
 
       .n8n-chat-widget .response-text {
           font-size: 14px;
-          color: var(--chat--color-font);
+          color: #333333 !important;
           opacity: 0.7;
           margin: 0;
       }
@@ -169,7 +169,7 @@
           flex: 1;
           overflow-y: auto;
           padding: 20px;
-          background: var(--chat--color-background);
+          background: #ffffff !important;
           display: flex;
           flex-direction: column;
       }
@@ -193,16 +193,16 @@
       }
 
       .n8n-chat-widget .chat-message.bot {
-          background: var(--chat--color-background);
+          background: #ffffff !important;
           border: 1px solid rgba(133, 79, 255, 0.2);
-          color: var(--chat--color-font);
+          color: #333333 !important;
           align-self: flex-start;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       }
 
       .n8n-chat-widget .chat-input {
           padding: 16px;
-          background: var(--chat--color-background);
+          background: #ffffff !important;
           border-top: 1px solid rgba(133, 79, 255, 0.1);
           display: flex;
           gap: 8px;
@@ -213,15 +213,15 @@
           padding: 12px;
           border: 1px solid rgba(133, 79, 255, 0.2);
           border-radius: 8px;
-          background: var(--chat--color-background);
-          color: var(--chat--color-font);
+          background: #ffffff !important;
+          color: #333333 !important;
           resize: none;
           font-family: inherit;
           font-size: 14px;
       }
 
       .n8n-chat-widget .chat-input textarea::placeholder {
-          color: var(--chat--color-font);
+          color: #333333 !important;
           opacity: 0.6;
       }
 
@@ -278,7 +278,7 @@
       .n8n-chat-widget .chat-footer {
           padding: 8px;
           text-align: center;
-          background: var(--chat--color-background);
+          background: #ffffff !important;
           border-top: 1px solid rgba(133, 79, 255, 0.1);
       }
 
@@ -307,13 +307,13 @@
       }
       /* For USER messages (gradient background) */
       .n8n-chat-widget .chat-message.user a {
-          color: var(--chat--color-background);  /* White or light color */
+          color: #ffffff !important;  /* White or light color */
           text-decoration: underline;
           opacity: 0.9;
       }
       .n8n-chat-widget .chat-message.user a:hover {
           opacity: 1;
-          color: var(--chat--color-background);
+          color: #ffffff !important;
       }
       /* For BOT messages (white background) */
       .n8n-chat-widget .chat-message.bot a {
