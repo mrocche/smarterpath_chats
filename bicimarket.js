@@ -295,59 +295,35 @@
           opacity: 1;
       }
       
-      /* ===== MARKDOWN OVERRIDES ===== */
-      /* Reset PrestaShop styles */
-      .n8n-chat-widget .chat-message {
-          all: initial;
-          font-family: inherit !important;
-          color: var(--chat--color-font) !important;
-      }
-      
-      /* Paragraphs */
+      /* Markdown-specific styling */
       .n8n-chat-widget .chat-message p {
-          margin: 0 !important;
-          color: inherit !important;
-          font-size: 14px !important;
-          line-height: 1.5 !important;
+          margin: 0;
       }
-      
-      /* Emphasis */
       .n8n-chat-widget .chat-message em {
-          font-style: italic !important;
+          font-style: italic;
       }
-      
-      /* Bold text */
       .n8n-chat-widget .chat-message strong {
-          font-weight: bold !important;
+          font-weight: bold;
       }
-      
-      /* User messages (white text) */
-      .n8n-chat-widget .chat-message.user,
-      .n8n-chat-widget .chat-message.user * {
-          color: white !important;
-      }
-      
-      /* Bot messages (your custom color) */
-      .n8n-chat-widget .chat-message.bot,
-      .n8n-chat-widget .chat-message.bot * {
-          color: var(--chat--color-font) !important;
-      }
-      
-      /* Links in user messages */
+      /* For USER messages (gradient background) */
       .n8n-chat-widget .chat-message.user a {
-          color: white !important;
-          text-decoration: underline !important;
+          color: var(--chat--color-background);  /* White or light color */
+          text-decoration: underline;
+          opacity: 0.9;
       }
-      
-      /* Links in bot messages */
+      .n8n-chat-widget .chat-message.user a:hover {
+          opacity: 1;
+          color: var(--chat--color-background);
+      }
+      /* For BOT messages (white background) */
       .n8n-chat-widget .chat-message.bot a {
-          color: var(--chat--color-primary) !important;
-          text-decoration: underline !important;
+          color: var(--chat--color-primary);  /* Use primary color */
+          text-decoration: underline;
+          opacity: 0.9;
       }
-      
-      /* Hover states */
-      .n8n-chat-widget .chat-message a:hover {
-          opacity: 1 !important;
+      .n8n-chat-widget .chat-message.bot a:hover {
+          opacity: 1;
+          color: var(--chat--color-primary);
       }
     `;
 
