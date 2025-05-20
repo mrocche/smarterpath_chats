@@ -371,7 +371,14 @@
           style: { ...defaultConfig.style, ...window.ChatWidgetConfig.style }
         }
       : defaultConfig;
-
+    
+    // ===== ADD THESE 4 LINES BELOW =====
+    widgetContainer.style.setProperty('--chat--color-primary', config.style.primaryColor || '#ef9302');
+    widgetContainer.style.setProperty('--chat--color-secondary', config.style.secondaryColor || '#ef9302');
+    widgetContainer.style.setProperty('--chat--color-background', config.style.backgroundColor || '#ffffff');
+    widgetContainer.style.setProperty('--chat--color-font', config.style.fontColor || '#333333');
+    // ===== END OF ADDED CODE =====
+    
     // Prevent multiple initializations
     if (window.N8NChatWidgetInitialized) return;
     window.N8NChatWidgetInitialized = true;
