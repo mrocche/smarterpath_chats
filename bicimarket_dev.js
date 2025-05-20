@@ -312,7 +312,7 @@
           transition: opacity 0.2s;
       }
       .n8n-chat-widget .chat-message a:hover {
-          opacity: 1;
+          opacity: 0.5;
           color: var(--chat--color-primary);  /* Use primary color on hover */
       }
     `;
