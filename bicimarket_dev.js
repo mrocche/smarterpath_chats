@@ -308,12 +308,12 @@
       .n8n-chat-widget .chat-message a {
           color: var(--chat--color-font);  /* Use font color instead of primary */
           text-decoration: underline;
-          opacity: 0.5;
-          transition: opacity 0.2s;
+          opacity: 0.9;
       }
       .n8n-chat-widget .chat-message a:hover {
-          opacity: 0.8;
-          color: var(--chat--color-font);  /* Use primary color on hover */
+          opacity: 1;
+          /* Remove color change, keep same as default */
+          color: var(--chat--color-font);
       }
     `;
 
