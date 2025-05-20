@@ -298,6 +298,7 @@
       /* Markdown-specific styling */
       .n8n-chat-widget .chat-message p {
           margin: 0;
+          color: inherit !important; /* This one line fixes the color */
       }
       .n8n-chat-widget .chat-message em {
           font-style: italic;
