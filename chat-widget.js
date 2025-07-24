@@ -38,6 +38,7 @@
         z-index: 1000;
         display: none;
         width: 380px;
+        min-height: 400px;
         max-height: 80vh;
         background: var(--chat--color-background);
         border-radius: 16px;
@@ -166,11 +167,11 @@
       .n8n-chat-widget .chat-interface {
         display: none;
         flex-direction: column;
-        height: 100%;
       }
 
       .n8n-chat-widget .chat-interface.active {
         display: flex;
+        flex: 1;
       }
 
       .n8n-chat-widget .chat-messages {
@@ -360,12 +361,13 @@
       @media (max-width: 480px) {
         .n8n-chat-widget .chat-container {
           width: 100%;
+          min-height: auto;
           max-width: 100%;
+          max-height: 100vh;
           bottom: 0;
           right: 0;
           left: 0;
           border-radius: 0;
-          max-height: 100vh;
         }
         .n8n-chat-widget .chat-toggle {
           bottom: 16px;
@@ -489,7 +491,7 @@
       return crypto.randomUUID();
     }
 
-    // Add message with animation
+    // Add message with animation and ensure auto-scroll
     function addMessage(content, className) {
       const messageDiv = document.createElement('div');
       messageDiv.className = `chat-message ${className}`;
@@ -514,6 +516,7 @@
     // Remove loading indicator
     function removeLoading(loadingDiv) {
       if (loadingDiv) loadingDiv.remove();
+      messagesContainer.scrollTop = messagesContainer.scrollHeight; // Ensure scroll after removal
     }
 
     // Start new conversation
@@ -542,6 +545,7 @@
         setTimeout(() => {
           newConversation.style.display = 'none';
           chatInterface.classList.add('active');
+          messagesContainer.scrollTop = messagesContainer.scrollHeight; // Extra scroll ensure
         }, 300);
 
         const botMessageContent = Array.isArray(responseData)
@@ -619,6 +623,12 @@
       if (chatContainer.classList.contains('open') && !chatInterface.classList.contains('active')) {
         brandHeader.style.display = 'flex';
       }
+      // Ensure scroll on open if chat is active
+      setTimeout(() => {
+        if (chatInterface.classList.contains('active')) {
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+      }, 300);
     });
 
     closeButtons.forEach(button => {
