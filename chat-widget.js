@@ -448,7 +448,7 @@
     function showLoading() {
       const loadingDiv = document.createElement('div');
       loadingDiv.className = 'chat-message bot loading visible';
-      loadingDiv.innerHTML = 'Thinking...';
+      loadingDiv.innerHTML = 'Writing...';
       messagesContainer.appendChild(loadingDiv);
       // Scroll to bottom to show loading indicator
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
