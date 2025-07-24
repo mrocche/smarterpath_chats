@@ -167,11 +167,12 @@
       .n8n-chat-widget .chat-interface {
         display: none;
         flex-direction: column;
+        flex: 1;
+        min-height: 0; /* Crucial fix for flex container */
       }
 
       .n8n-chat-widget .chat-interface.active {
         display: flex;
-        flex: 1;
       }
 
       .n8n-chat-widget .chat-messages {
@@ -182,6 +183,7 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
+        min-height: 0; /* Crucial fix for scrolling */
       }
 
       .n8n-chat-widget .chat-message {
@@ -499,6 +501,7 @@
       messagesContainer.appendChild(messageDiv);
       setTimeout(() => {
         messageDiv.classList.add('visible');
+        // Always scroll to bottom when adding a new message
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }, 10);
     }
@@ -509,6 +512,7 @@
       loadingDiv.className = 'chat-message bot loading visible';
       loadingDiv.innerHTML = 'Thinking...';
       messagesContainer.appendChild(loadingDiv);
+      // Scroll to bottom to show loading indicator
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       return loadingDiv;
     }
@@ -516,7 +520,8 @@
     // Remove loading indicator
     function removeLoading(loadingDiv) {
       if (loadingDiv) loadingDiv.remove();
-      messagesContainer.scrollTop = messagesContainer.scrollHeight; // Ensure scroll after removal
+      // Ensure scroll position is maintained at bottom
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
     // Start new conversation
@@ -545,7 +550,10 @@
         setTimeout(() => {
           newConversation.style.display = 'none';
           chatInterface.classList.add('active');
-          messagesContainer.scrollTop = messagesContainer.scrollHeight; // Extra scroll ensure
+          // Scroll to bottom after opening chat interface
+          setTimeout(() => {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          }, 10);
         }, 300);
 
         const botMessageContent = Array.isArray(responseData)
