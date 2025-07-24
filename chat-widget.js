@@ -69,7 +69,9 @@
         align-items: center;
         gap: 12px;
         border-bottom: 1px solid rgba(133, 79, 255, 0.1);
-        position: relative;
+        position: sticky;
+        top: 0;
+        z-index: 10;
         background: var(--chat--color-background);
       }
 
@@ -108,71 +110,11 @@
         color: var(--chat--color-font);
       }
 
-      .n8n-chat-widget .new-conversation {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 20px;
-        text-align: center;
-        width: 100%;
-        max-width: 300px;
-        transition: opacity 0.3s ease;
-      }
-
-      .n8n-chat-widget .welcome-text {
-        font-size: 24px;
-        font-weight: 600;
-        color: var(--chat--color-font);
-        margin-bottom: 24px;
-        line-height: 1.3;
-      }
-
-      .n8n-chat-widget .new-chat-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        padding: 16px 24px;
-        background: linear-gradient(135deg, var(--chat--color-primary) 0%, var(--chat--color-secondary) 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: 500;
-        font-family: inherit;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 4px 12px rgba(133, 79, 255, 0.2);
-      }
-
-      .n8n-chat-widget .new-chat-btn:hover {
-        transform: scale(1.02);
-        box-shadow: 0 6px 16px rgba(133, 79, 255, 0.3);
-      }
-
-      .n8n-chat-widget .message-icon {
-        width: 20px;
-        height: 20px;
-      }
-
-      .n8n-chat-widget .response-text {
-        font-size: 14px;
-        color: var(--chat--color-font);
-        opacity: 0.7;
-        margin: 0;
-      }
-
       .n8n-chat-widget .chat-interface {
-        display: none;
+        display: flex;
         flex-direction: column;
         flex: 1;
         min-height: 0; /* Crucial fix for flex container */
-      }
-
-      .n8n-chat-widget .chat-interface.active {
-        display: flex;
       }
 
       .n8n-chat-widget .chat-messages {
@@ -362,18 +304,29 @@
       /* Responsive design */
       @media (max-width: 480px) {
         .n8n-chat-widget .chat-container {
-          width: 100%;
+          width: calc(100% - 40px);
+          max-width: calc(100% - 40px);
           min-height: auto;
-          max-width: 100%;
-          max-height: 100vh;
-          bottom: 0;
-          right: 0;
-          left: 0;
-          border-radius: 0;
+          max-height: 80vh;
+          bottom: 20px;
+          right: 20px;
+          left: 20px;
+          border-radius: 16px;
         }
         .n8n-chat-widget .chat-toggle {
           bottom: 16px;
           right: 16px;
+        }
+        .n8n-chat-widget .chat-container.position-left {
+          right: 20px;
+          left: auto;
+        }
+        .n8n-chat-widget .chat-toggle.position-left {
+          right: auto;
+          left: 16px;
+        }
+        .n8n-chat-widget .chat-container.open ~ .chat-toggle {
+          display: none;
         }
       }
     `;
@@ -391,9 +344,7 @@
       },
       branding: {
         logo: '',
-        name: '',
-        welcomeText: '',
-        responseTimeText: ''
+        name: ''
       },
       style: {
         primaryColor: '#854fff',
@@ -432,22 +383,12 @@
     const chatContainer = document.createElement('div');
     chatContainer.className = `chat-container${config.style.position === 'left' ? ' position-left' : ''}`;
 
-    // Consolidated HTML (removed duplicated header, removed footer)
+    // Simplified HTML without welcome screen
     const widgetHTML = `
       <div class="brand-header">
         <img src="${config.branding.logo}" alt="${config.branding.name}">
         <span>${config.branding.name}</span>
         <button class="close-button">×</button>
-      </div>
-      <div class="new-conversation">
-        <h2 class="welcome-text">${config.branding.welcomeText}</h2>
-        <button class="new-chat-btn">
-          <svg class="message-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/>
-          </svg>
-          Send us a message
-        </button>
-        <p class="response-text">${config.branding.responseTimeText}</p>
       </div>
       <div class="chat-interface">
         <div class="chat-messages"></div>
@@ -473,9 +414,6 @@
 
     // Element references
     const brandHeader = chatContainer.querySelector('.brand-header');
-    const newConversation = chatContainer.querySelector('.new-conversation');
-    const newChatBtn = chatContainer.querySelector('.new-chat-btn');
-    const chatInterface = chatContainer.querySelector('.chat-interface');
     const messagesContainer = chatContainer.querySelector('.chat-messages');
     const textarea = chatContainer.querySelector('textarea');
     const sendButton = chatContainer.querySelector('button[type="submit"]');
@@ -546,16 +484,6 @@
         const responseData = await response.json();
         removeLoading(loadingDiv);
 
-        newConversation.style.opacity = '0';
-        setTimeout(() => {
-          newConversation.style.display = 'none';
-          chatInterface.classList.add('active');
-          // Scroll to bottom after opening chat interface
-          setTimeout(() => {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-          }, 10);
-        }, 300);
-
         const botMessageContent = Array.isArray(responseData)
           ? responseData[0].output
           : responseData.output;
@@ -603,8 +531,6 @@
     }
 
     // Event listeners
-    newChatBtn.addEventListener('click', startNewConversation);
-
     sendButton.addEventListener('click', () => {
       const message = textarea.value.trim();
       if (message) {
@@ -628,12 +554,12 @@
 
     toggleButton.addEventListener('click', () => {
       chatContainer.classList.toggle('open');
-      if (chatContainer.classList.contains('open') && !chatInterface.classList.contains('active')) {
-        brandHeader.style.display = 'flex';
+      if (chatContainer.classList.contains('open') && !currentSessionId) {
+        startNewConversation();
       }
       // Ensure scroll on open if chat is active
       setTimeout(() => {
-        if (chatInterface.classList.contains('active')) {
+        if (chatContainer.classList.contains('open')) {
           messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
       }, 300);
