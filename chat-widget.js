@@ -575,7 +575,17 @@
   // Load Marked library
   const markedScript = document.createElement('script');
   markedScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js';
-  markedScript.onload = initChatWidget;
+  markedScript.onload = function() {
+    // Configure marked to open links in a new tab
+    if (window.marked) {
+      const renderer = new marked.Renderer();
+      renderer.link = function(href, title, text) {
+        return `<a href="${href}"${title ? ` title="${title}"` : ''} target="_blank" rel="noopener">${text}</a>`;
+      };
+      marked.use({ renderer });
+    }
+    initChatWidget();
+  };
   markedScript.onerror = () => console.error("Failed to load Marked library.");
   document.head.appendChild(markedScript);
 })();
