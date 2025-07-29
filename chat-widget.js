@@ -1,9 +1,23 @@
 (function() {
   // Helper function to convert Markdown to HTML using Marked.
-  function convertMarkdown(text) {
+  function convertMarkdown(text, isBotMessage = false) {
     if (window.marked) {
       try {
-        return typeof marked.parse === "function" ? marked.parse(text) : marked(text);
+        if (isBotMessage) {
+          // Create custom renderer for bot messages to open links in new tab
+          const renderer = new marked.Renderer();
+          renderer.link = function(href, title, text) {
+            return `<a href="${href}"${title ? ` title="${title}"` : ''} target="_blank" rel="noopener noreferrer">${text}</a>`;
+          };
+          return typeof marked.parse === "function" 
+            ? marked.parse(text, { renderer }) 
+            : marked(text, { renderer });
+        } else {
+          // Regular conversion for non-bot messages
+          return typeof marked.parse === "function" 
+            ? marked.parse(text) 
+            : marked(text);
+        }
       } catch (e) {
         console.error("Error converting markdown:", e);
         return text;
@@ -435,7 +449,11 @@
     function addMessage(content, className) {
       const messageDiv = document.createElement('div');
       messageDiv.className = `chat-message ${className}`;
-      messageDiv.innerHTML = convertMarkdown(content);
+      
+      // Determine if it's a bot message (including loading messages)
+      const isBotMessage = className.includes('bot');
+      messageDiv.innerHTML = convertMarkdown(content, isBotMessage);
+      
       messagesContainer.appendChild(messageDiv);
       setTimeout(() => {
         messageDiv.classList.add('visible');
@@ -575,17 +593,7 @@
   // Load Marked library
   const markedScript = document.createElement('script');
   markedScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js';
-  markedScript.onload = function() {
-    // Configure marked to open links in a new tab
-    if (window.marked) {
-      const renderer = new marked.Renderer();
-      renderer.link = function(href, title, text) {
-        return `<a href="${href}"${title ? ` title="${title}"` : ''} target="_blank" rel="noopener">${text}</a>`;
-      };
-      marked.use({ renderer });
-    }
-    initChatWidget();
-  };
+  markedScript.onload = initChatWidget;
   markedScript.onerror = () => console.error("Failed to load Marked library.");
   document.head.appendChild(markedScript);
 })();
